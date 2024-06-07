@@ -1,5 +1,7 @@
 const todos = [];
 const RENDER_EVENT = 'render-todo';
+const SAVED_EVENT = 'saved-todo';
+const STORAGE_KEY = 'TODO_APPS';
 
 document.addEventListener('DOMContentLoaded', function () {
     const submitForm = document.getElementById('form');
@@ -7,7 +9,27 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
         addTodo();
     });
+
+    if (isStorageExist()) {
+        loadDataFromStorage()
+    }
 });
+
+function isStorageExist() /* boolean */ {
+    if (typeof (Storage) === undefined) {
+        alert('Browser kamu tidak mendukung local storage');
+        return false;
+    }
+    return true;
+}
+
+function saveData() {
+    if (isStorageExist()) {
+        const parsed = JSON.stringify(todos);
+        localStorage.setItem(STORAGE_KEY, parsed);
+        document.dispatchEvent(new Event(SAVED_EVENT));
+    }
+}
 
 function addTodo() {
     const textTodo = document.getElementById('title').value;
@@ -151,10 +173,19 @@ function findTodoIndex(todoId) {
     return -1;
 }
 
-function saveData() {
-    if (isStorageExist()) {
-        const parsed = JSON.stringify(todos);
-        localStorage.setitem(STORAGE_KEY, parsed);
-        document.dispatchEvent(new Event(SAVED_EVENT));
+document.addEventListener(SAVED_EVENT, function () {
+    console.log(localStorage.getItem(STORAGE_KEY));
+});
+
+function loadDataFromStorage() {
+    const serializedData = localStorage.getItem(STORAGE_KEY);
+    let data = JSON.parse(serializedData);
+
+    if (data !== null) {
+        for (const todo of data) {
+            todos.push(todo);
+        }
     }
+
+    document.dispatchEvent(new Event(RENDER_EVENT));
 }
