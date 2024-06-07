@@ -15,22 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-function isStorageExist() /* boolean */ {
-    if (typeof (Storage) === undefined) {
-        alert('Browser kamu tidak mendukung local storage');
-        return false;
-    }
-    return true;
-}
-
-function saveData() {
-    if (isStorageExist()) {
-        const parsed = JSON.stringify(todos);
-        localStorage.setItem(STORAGE_KEY, parsed);
-        document.dispatchEvent(new Event(SAVED_EVENT));
-    }
-}
-
 function addTodo() {
     const textTodo = document.getElementById('title').value;
     const timestamp = document.getElementById('date').value;
@@ -171,6 +155,22 @@ function findTodoIndex(todoId) {
     }
 
     return -1;
+}
+
+function isStorageExist() /* boolean */ {
+    if (typeof (Storage) === undefined) {
+        alert('Browser kamu tidak mendukung local storage');
+        return false;
+    }
+    return true;
+}
+
+function saveData() {
+    if (isStorageExist()) {
+        const parsed = JSON.stringify(todos);
+        localStorage.setItem(STORAGE_KEY, parsed);
+        document.dispatchEvent(new Event(SAVED_EVENT));
+    }
 }
 
 document.addEventListener(SAVED_EVENT, function () {
