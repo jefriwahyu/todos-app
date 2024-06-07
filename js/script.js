@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', function () {
     submitForm.addEventListener('submit', function (event) {
         event.preventDefault();
         addTodo();
+
+        document.getElementById('form').reset();
     });
 
     if (isStorageExist()) {
@@ -174,6 +176,12 @@ function saveData() {
 }
 
 document.addEventListener(SAVED_EVENT, function () {
+    var toast = document.getElementById("toast");
+    toast.innerText = "Data Berhasil ditambah";
+    toast.className = "toast show";
+    setTimeout(function() {
+        toast.className = toast.className.replace("show", "");
+    }, 3000); // Adjust the duration to show the toast
     console.log(localStorage.getItem(STORAGE_KEY));
 });
 
